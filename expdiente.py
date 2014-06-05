@@ -18,12 +18,6 @@ class expediente(Frame):
 			self.busqueda = Label (self, text = "Busqueda: ",font="Times 15 italic bold" )
 			self.busqueda.place(x=30,y=35)
 
-			
-
-			self.entrythingy = Entry (self, width=10)
-			self.entrythingy.place(x=100,y=35)
-			self.contenido = StringVar()
-			self.entrythingy.config(textvariable = self.contenido)
 
 			# NOMBRE
 
@@ -31,7 +25,7 @@ class expediente(Frame):
 			self.nombre.place(x=30,y=65)
 			self.nombreres = Label (self, text = "")
 			self.nombreres.place(x = 90, y =67)
-
+ 
 			# CELULAR
 
 			self.celular = Label(self, text = "Celular: ",font="Times 15 italic bold" )
@@ -128,8 +122,8 @@ cobra=23
 book = xlrd.open_workbook("hello.xlsx") # Abrimos el archivo de excel
 sh = book.sheet_by_index(0) # Nos situamos en la primer hoja
 
-def buscar():
-	dado=ola.contenido.get()
+def buscar(contentry):
+	dado=contentry
 	print "Esto es lo que se escribio en el cuadro " + dado
 	
 	
@@ -140,7 +134,7 @@ def buscar():
 		leido = sh.cell_value(colx=cuent , rowx = contador)
 		leidoint = int(leido)
 
-		if str(dado) == str(leidoint):
+		if str(contentry) == str(leidoint):
 			break
 		else:
 			contador = contador + 1
