@@ -6,6 +6,7 @@ import xlrd
 import time, os
 from Tkinter import *
 from expdiente import *
+from nuevo_cliente import *
 
 v0 = Tk()
 v0.config(bg = "white")
@@ -20,21 +21,24 @@ notebook.add(antig, text='Antiguedad de Documentos')
 titulo = Label(antig,   text="Esta es la antiguedad de documentos", fg= "black")
 titulo.pack()
 
-newc = Frame(notebook) # FRAME NUEVO CLIENTE
+newc = nuevoc(notebook) # FRAME NUEVO CLIENTE
 notebook.add(newc, text= 'Nuevo Cliente')
 
 #************* FRAME EXPEDIENTE DE CLIENTE
-ola = expediente(notebook) #CREACION DE FRAME
-notebook.add(ola, text='Expediente del Cliente')#AÑADIMOS FRAME AL NOTEBOOK
+expe = expediente(notebook) #CREACION DE FRAME
+notebook.add(expe, text='Expediente del Cliente')#AÑADIMOS FRAME AL NOTEBOOK
 
-entrythingy = Entry (ola, width=10)
+entrythingy = Entry (expe, width=10)
 entrythingy.place(x=100,y=35)
 contenido = StringVar()
 entrythingy.config(textvariable = contenido)
 
-boton = Button(ola,  text="Buscar" , command = lambda : buscar(contenido.get()) )
+botonsearch = Button(expe,  text="Buscar" , command = lambda : expe.buscar(contenido.get()) )
 print contenido.get()
-boton.place(x=210, y = 35) 
+botonsearch.place(x=210, y = 35)
+
+botonsave = Button(newc,  text="Guardar" , command = lambda : newc.guardar_nuevo() )
+botonsave.place(x=210, y = 35)  
 
 
 

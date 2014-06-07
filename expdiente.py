@@ -5,10 +5,50 @@ import time, os
 from Tkinter import *
 
 class expediente(Frame):
-
 	def __init__(self, master):
 			Frame.__init__(self, master)
 			self.pack()
+
+			self.logo = Canvas (self,height = 120, width =230, bg="white")
+			self.logo.place(x=550,y=10)
+
+			self.file_logo = PhotoImage(file="logo_optica.gif")
+			self.logo.create_image(115,60, image =self.file_logo)
+
+			"""self.tabla = Canvas (self,height = 120, width =740, bg="white")
+			self.tabla.place(x=30,y=370)
+
+			self.file = PhotoImage(file="tabla_img.gif")
+			self.tabla.create_image(370,60, image =self.file)"""
+
+			#Variables y lectura de archivo
+			self.cuent = 0
+			self.nom = 1
+			self.cel =2
+			self.tel =3
+			self.call =4 
+			self.nume = 5
+			self.colo = 6
+			self.entreca=7
+			self.ciud = 8
+			self.esta = 9
+			self.obser = 10
+			self.ocupa =11
+			self.opto = 12
+			self.vende =13
+			self.saldoor =15 
+			self.engan = 16
+			self.formpag =17
+			self.fech2pag=18
+			self.diadepag=19
+			self.deb=20
+			self.atras=21
+			self.ultabo=22
+			self.promes =23
+			self.cobra=24
+
+			self.book = xlrd.open_workbook("data_new.xls") # Abrimos el archivo de excel
+			self.sh = self.book.sheet_by_index(0) # Nos situamos en la primer hoja
 
 			self.titulo = Label (self, text = "Expediente del Cliente")
 			self.titulo.place(x=1,y=1)
@@ -34,10 +74,10 @@ class expediente(Frame):
 			self.celularres.place(x = 85, y =97)
 
 
-			self.tel = Label(self, text = "Telefono de casa: ",font="Times 15 italic bold" )
-			self.tel.place(x=215,y=95)
-			self.telres = Label (self, text = "")
-			self.telres.place(x = 330, y =97)
+			self.telefono = Label(self, text = "Telefono de casa: ",font="Times 15 italic bold" )
+			self.telefono.place(x=215,y=95)
+			self.telefonores = Label (self, text = "")
+			self.telefonores.place(x = 330, y =97)
 
 
 			#DIRECCION
@@ -85,107 +125,156 @@ class expediente(Frame):
 			self.ocupacionres = Label (self, text = "")
 			self.ocupacionres.place(x=110, y = 277)
 
-			self.ocupacion = Label (self, text = "Optometrista: ",font="Times 15 italic bold" )
-			self.ocupacion.place(x= 30, y=305)
-			self.ocupacionres = Label (self, text = "")
-			self.ocupacionres.place(x=120, y = 307)
+			self.optometrista = Label (self, text = "Optometrista: ",font="Times 15 italic bold" )
+			self.optometrista.place(x= 30, y=305)
+			self.optometristares = Label (self, text = "")
+			self.optometristares.place(x=120, y = 307)
 
-			self.ocupacion = Label (self, text = "Vendedor: ",font="Times 15 italic bold" )
-			self.ocupacion.place(x= 350, y=305)
-			self.ocupacionres = Label (self, text = "")
-			self.ocupacionres.place(x=420, y = 307)
+			self.vendedor = Label (self, text = "Vendedor: ",font="Times 15 italic bold" )
+			self.vendedor.place(x= 350, y=305)
+			self.vendedorres = Label (self, text = "")
+			self.vendedorres.place(x=420, y = 307)
 
-cuent = 0
-nom = 1
-cel =2
-tel =3
-call =4 
-nume = 5
-colo = 6
-entreca=7
-ciud = 8
-esta = 9
-obser = 10
-ocupa =11
-opto = 12
-vende =13
-saldoor =15 
-engan = 16
-formpag =17
-diadepag=18
-deb=19
-atras=20
-ultabo=21
-promes =22
-cobra=23
+			# DATOS DE PAGOS
 
-book = xlrd.open_workbook("hello.xlsx") # Abrimos el archivo de excel
-sh = book.sheet_by_index(0) # Nos situamos en la primer hoja
+			self.saldooriginal = Label (self, text = "Saldo \nOriginal: ",font="Times 15 italic bold" )
+			self.saldooriginal.place(x= 30, y=370)
+			self.saldooriginalres = Label (self, text = "")
+			self.saldooriginalres.place(x=33, y = 415)
 
-def buscar(contentry):
-	dado=contentry
-	print "Esto es lo que se escribio en el cuadro " + dado
-	
-	
-	leido = "0" # Creamos una variable donde guardaremos lo que se lea en cada celda
-	contador = 1
+			self.enganche = Label (self, text = "Enganche: ",font="Times 15 italic bold" )
+			self.enganche.place(x= 115, y=370)
+			self.engancheres = Label (self, text = "")
+			self.engancheres.place(x=120, y = 415)
 
-	while contador < int(sh.nrows):
-		leido = sh.cell_value(colx=cuent , rowx = contador)
-		leidoint = int(leido)
+			self.formapago = Label (self, text = "Forma de \nPago: ",font="Times 15 italic bold" )
+			self.formapago.place(x= 205, y=370)
+			self.formapagores = Label (self, text = "")
+			self.formapagores.place(x=205, y = 415)
 
-		if str(contentry) == str(leidoint):
-			break
-		else:
-			contador = contador + 1
+			self.fecha2pago= Label (self, text = "Fecha Segundo \nPago: ",font="Times 15 italic bold" )
+			self.fecha2pago.place(x= 295, y=370)
+			self.fecha2pagores = Label (self, text = "")
+			self.fecha2pagores.place(x=300, y = 415)
 
-	
-	print contador
+			self.diadepago = Label (self, text = "Dia de Pago: ",font="Times 15 italic bold" )
+			self.diadepago.place(x= 410, y=370)
+			self.diadepagores = Label (self, text = "")
+			self.diadepagores.place(x=425, y = 415)
 
-	leer_todo(contador)
+			self.debe = Label (self, text = "Debe: ",font="Times 15 italic bold" )
+			self.debe.place(x= 515, y=370)
+			self.deberes = Label (self, text = "")
+			self.deberes.place(x=500, y = 415)
 
-	contador = 0
+			self.atraso = Label (self, text = "Atraso: ",font="Times 15 italic bold" )
+			self.atraso.place(x= 560, y=370)
+			self.atrasores = Label (self, text = "")
+			self.atrasores.place(x=565, y = 415)
 
+			self.ultimoabono = Label (self, text = "Ultimo \nabono: ",font="Times 15 italic bold" )
+			self.ultimoabono.place(x= 640, y=370)
+			self.ultimoabonores = Label (self, text = "")
+			self.ultimoabonores.place(x=645, y = 415)
 
-
-def leer_todo(numerodecuenta):
-
-	conta = 0
-	while conta < 24 :
-
-		print "Estos son todos los datos del cliente: "
-		print conta, numerodecuenta
-		print sh.cell_value(colx=conta, rowx = numerodecuenta)
-		
-		if conta == nom:
-			ola.nombreres.config(text = sh.cell_value(colx=conta, rowx = numerodecuenta))
-		elif conta == cel:
-			ola.celularres.config(text = sh.cell_value(colx=conta, rowx = numerodecuenta))
-		elif conta == tel:
-			ola.telres.config(text = sh.cell_value(colx=conta, rowx = numerodecuenta))
-		elif conta == call:
-			ola.calleres.config(text = sh.cell_value(colx=conta, rowx = numerodecuenta))
-		elif conta ==nume:
-			ola.numerores.config(text = sh.cell_value(colx=conta, rowx = numerodecuenta))
-		elif conta == colo:
-			ola.coloniares.config(text = sh.cell_value(colx=conta, rowx = numerodecuenta))
-		elif conta == entreca:
-			ola.entrecallesres.config(text = sh.cell_value(colx=conta, rowx = numerodecuenta))
-		elif conta == ciud:
-			ola.ciudadres.config(text = sh.cell_value(colx=conta, rowx = numerodecuenta))
-		elif conta == esta:
-			ola.estadores.config(text = sh.cell_value(colx=conta, rowx = numerodecuenta))
-		elif conta == obser:
-			ola.observres.config(text = sh.cell_value(colx=conta, rowx = numerodecuenta))
-		elif conta == ocupa:
-			ola.ocupacionres.config(text = sh.cell_value(colx=conta, rowx = numerodecuenta))
-		conta = conta + 1
-
-	conta = 0	
+			self.promesapago = Label (self, text = "Promesa de \npago: ",font="Times 15 italic bold" )
+			self.promesapago.place(x= 695, y=370)
+			self.promesapagores = Label (self, text = "")
+			self.promesapagores.place(x=700, y = 415)
 
 
 
 
+	def buscar(self,contentry):
+
+		self.book = xlrd.open_workbook("data_new.xls") # Abrimos el archivo de excel
+		self.sh = self.book.sheet_by_index(0)
+
+		dado=contentry
+		print "Esto es lo que se escribio en el cuadro " + dado	
+				
+		leido = "0" # Creamos una variable donde guardaremos lo que se lea en cada celda
+		contador = 1
+
+		while contador < int(self.sh.nrows):
+			leido = self.sh.cell_value(colx=self.cuent , rowx = contador)
+			leidoint = int(leido)
+
+			if str(contentry) == str(leidoint):
+				break
+			else:
+				contador = contador + 1
+
+				
+		print contador
+
+		self.leer_todo(contador)
+
+		contador = 0
+
+	def leer_todo(self,numerodecuenta):
+		self.book = xlrd.open_workbook("data_new.xls") # Abrimos el archivo de excel
+		self.sh = self.book.sheet_by_index(0)
+
+		conta = 0
+		while conta < 25 :
+
+			print "Estos son todos los datos del cliente: "
+			print conta, numerodecuenta
+			print self.sh.cell_value(colx=conta, rowx = numerodecuenta)
+			
+			if conta == self.nom:
+				self.nombreres.config(text = self.sh.cell_value(colx=conta, rowx = numerodecuenta))
+			elif conta == self.cel:
+				celif = int(self.sh.cell_value(colx=conta, rowx = numerodecuenta))
+				self.celularres.config(text = str(celif))
+			elif conta == self.tel:
+				telif = int(self.sh.cell_value(colx=conta, rowx = numerodecuenta))
+				self.telefonores.config(text = str(telif))
+			elif conta == self.call:
+				self.calleres.config(text = self.sh.cell_value(colx=conta, rowx = numerodecuenta))
+			elif conta ==self.nume:
+				numif = int(self.sh.cell_value(colx=conta, rowx = numerodecuenta))
+				self.numerores.config(text = str(numif))
+			elif conta == self.colo:
+				self.coloniares.config(text = self.sh.cell_value(colx=conta, rowx = numerodecuenta))
+			elif conta == self.entreca:
+				self.entrecallesres.config(text = self.sh.cell_value(colx=conta, rowx = numerodecuenta))
+			elif conta == self.ciud:
+				self.ciudadres.config(text = self.sh.cell_value(colx=conta, rowx = numerodecuenta))
+			elif conta == self.esta:
+				self.estadores.config(text = self.sh.cell_value(colx=conta, rowx = numerodecuenta))
+			elif conta == self.obser:
+				self.observres.config(text = self.sh.cell_value(colx=conta, rowx = numerodecuenta))
+			elif conta == self.ocupa:
+				self.ocupacionres.config(text = self.sh.cell_value(colx=conta, rowx = numerodecuenta))
+			elif conta == self.opto:
+				self.optometristares.config(text = self.sh.cell_value(colx=conta, rowx = numerodecuenta))
+			elif conta == self.vende:
+				self.vendedorres.config(text = self.sh.cell_value(colx=conta, rowx = numerodecuenta))
+		#******DATOS DE COMPRA********
+			elif conta == self.saldoor:
+				self.saldooriginalres.config(text = self.sh.cell_value(colx=conta, rowx = numerodecuenta))
+			elif conta == self.engan:
+				self.engancheres.config(text = self.sh.cell_value(colx=conta, rowx = numerodecuenta))
+			elif conta == self.formpag:
+				self.formapagores.config(text = self.sh.cell_value(colx=conta, rowx = numerodecuenta))
+			elif conta == self.fech2pag:
+				self.fecha2pagores.config(text = self.sh.cell_value(colx=conta, rowx = numerodecuenta))
+			elif conta == self.diadepag:
+				self.diadepagores.config(text = self.sh.cell_value(colx=conta, rowx = numerodecuenta))
+			elif conta == self.deb:
+				self.deberes.config(text = self.sh.cell_value(colx=conta, rowx = numerodecuenta))
+			elif conta == self.atras:
+				self.atrasores.config(text = self.sh.cell_value(colx=conta, rowx = numerodecuenta))
+			elif conta == self.ultabo:
+				self.ultimoabonores.config(text = self.sh.cell_value(colx=conta, rowx = numerodecuenta))
+			elif conta == self.promes:
+				self.promesapagores.config(text = self.sh.cell_value(colx=conta, rowx = numerodecuenta))
+
+			conta = conta + 1
+
+		conta = 0	
 
 
 
@@ -198,7 +287,15 @@ def leer_todo(numerodecuenta):
 
 
 
-v0 = Tk()
+
+
+
+
+
+
+
+
+"""v0 = Tk()
 v0.config(bg = "white")
 v0.title('Administracion de Ventas')
 v0.geometry('860x650+220+80')
@@ -228,5 +325,4 @@ notebook.add(newc, text= 'Nuevo Cliente')
 
 
 
-v0.mainloop()
-#""""
+v0.mainloop()"""
