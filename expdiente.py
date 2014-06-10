@@ -3,6 +3,9 @@ import ttk
 import xlrd
 import time, os
 from Tkinter import *
+from dateutil.relativedelta import *
+from dateutil.rrule import *
+from datetime import *
 
 class expediente(Frame):
 	def __init__(self, master):
@@ -42,8 +45,8 @@ class expediente(Frame):
 			self.fech2pag=18
 			self.diadepag=19
 			self.deb=20
-			self.atras=21
-			self.ultabo=22
+			self.atras=22
+			self.ultabo=21
 			self.promes =23
 			self.cobra=24
 
@@ -152,30 +155,25 @@ class expediente(Frame):
 			self.formapagores = Label (self, text = "")
 			self.formapagores.place(x=205, y = 415)
 
-			self.fecha2pago= Label (self, text = "Fecha Segundo \nPago: ",font="Times 15 italic bold" )
-			self.fecha2pago.place(x= 295, y=370)
-			self.fecha2pagores = Label (self, text = "")
-			self.fecha2pagores.place(x=300, y = 415)
-
 			self.diadepago = Label (self, text = "Dia de Pago: ",font="Times 15 italic bold" )
-			self.diadepago.place(x= 410, y=370)
+			self.diadepago.place(x= 300, y=370)
 			self.diadepagores = Label (self, text = "")
-			self.diadepagores.place(x=425, y = 415)
+			self.diadepagores.place(x=325, y = 415)
 
 			self.debe = Label (self, text = "Debe: ",font="Times 15 italic bold" )
-			self.debe.place(x= 515, y=370)
+			self.debe.place(x= 400, y=370)
 			self.deberes = Label (self, text = "")
-			self.deberes.place(x=500, y = 415)
+			self.deberes.place(x=390, y = 415)
 
 			self.atraso = Label (self, text = "Atraso: ",font="Times 15 italic bold" )
-			self.atraso.place(x= 560, y=370)
+			self.atraso.place(x= 460, y=370)
 			self.atrasores = Label (self, text = "")
-			self.atrasores.place(x=565, y = 415)
+			self.atrasores.place(x=465, y = 415)
 
 			self.ultimoabono = Label (self, text = "Ultimo \nabono: ",font="Times 15 italic bold" )
-			self.ultimoabono.place(x= 640, y=370)
+			self.ultimoabono.place(x= 560, y=370)
 			self.ultimoabonores = Label (self, text = "")
-			self.ultimoabonores.place(x=645, y = 415)
+			self.ultimoabonores.place(x=565, y = 415)
 
 			self.promesapago = Label (self, text = "Promesa de \npago: ",font="Times 15 italic bold" )
 			self.promesapago.place(x= 695, y=370)
@@ -191,7 +189,7 @@ class expediente(Frame):
 		self.sh = self.book.sheet_by_index(0)
 
 		dado=contentry
-		print "Esto es lo que se escribio en el cuadro " + dado	
+		#print "Esto es lo que se escribio en el cuadro " + dado	
 				
 		leido = "0" # Creamos una variable donde guardaremos lo que se lea en cada celda
 		contador = 1
@@ -206,11 +204,39 @@ class expediente(Frame):
 				contador = contador + 1
 
 				
-		print contador
+		#print contador
 
 		self.leer_todo(contador)
 
 		contador = 0
+
+	def atrasos(self,numerodecuenta):
+
+		fechastr = self.sh.cell_value(colx=self.ultabo, rowx = numerodecuenta)
+		fechaobj = date(int(fechastr[0:4]),int(fechastr[5:7]), int(fechastr[8:10]))
+		now =date.today()
+		formadepago=self.sh.cell_value(colx=17, rowx = numerodecuenta)
+		atraso = self.time_between(fechaobj,now,self.sh.cell_value(colx=17, rowx = numerodecuenta))
+		print "Esta es la forma de pago" , formadepago
+		if self.sh.cell_value(colx=17, rowx = numerodecuenta) == "Quincenal":
+			atraso = atraso * 2
+		
+		return atraso
+
+	def time_between(self,start,end,fpago):
+		atraso = ""
+
+		if fpago == "Semanal":	
+			atraso = rrule(WEEKLY,dtstart=start,until =end)
+			print "fue semanal"
+		elif fpago == "Quincenal":
+			atraso = rrule(MONTHLY,dtstart=start,until =end)
+		elif fpago == "Mensual":
+			atraso = rrule(MONTHLY,dtstart=start,until =end)
+
+		print "Este es el atraso de time between" ,atraso
+		return atraso.count()
+
 
 	def leer_todo(self,numerodecuenta):
 		self.book = xlrd.open_workbook("data_new.xls") # Abrimos el archivo de excel
@@ -219,9 +245,9 @@ class expediente(Frame):
 		conta = 0
 		while conta < 25 :
 
-			print "Estos son todos los datos del cliente: "
-			print conta, numerodecuenta
-			print self.sh.cell_value(colx=conta, rowx = numerodecuenta)
+			#print "Estos son todos los datos del cliente: "
+			##print conta, numerodecuenta
+			#print self.sh.cell_value(colx=conta, rowx = numerodecuenta)
 			
 			if conta == self.nom:
 				self.nombreres.config(text = self.sh.cell_value(colx=conta, rowx = numerodecuenta))
@@ -259,14 +285,13 @@ class expediente(Frame):
 				self.engancheres.config(text = self.sh.cell_value(colx=conta, rowx = numerodecuenta))
 			elif conta == self.formpag:
 				self.formapagores.config(text = self.sh.cell_value(colx=conta, rowx = numerodecuenta))
-			elif conta == self.fech2pag:
-				self.fecha2pagores.config(text = self.sh.cell_value(colx=conta, rowx = numerodecuenta))
 			elif conta == self.diadepag:
 				self.diadepagores.config(text = self.sh.cell_value(colx=conta, rowx = numerodecuenta))
 			elif conta == self.deb:
 				self.deberes.config(text = self.sh.cell_value(colx=conta, rowx = numerodecuenta))
 			elif conta == self.atras:
-				self.atrasores.config(text = self.sh.cell_value(colx=conta, rowx = numerodecuenta))
+				##print numerodecuenta
+				self.atrasores.config(text = self.atrasos(numerodecuenta))
 			elif conta == self.ultabo:
 				self.ultimoabonores.config(text = self.sh.cell_value(colx=conta, rowx = numerodecuenta))
 			elif conta == self.promes:
@@ -295,7 +320,7 @@ class expediente(Frame):
 
 
 
-"""v0 = Tk()
+v0 = Tk()
 v0.config(bg = "white")
 v0.title('Administracion de Ventas')
 v0.geometry('860x650+220+80')
@@ -325,4 +350,4 @@ notebook.add(newc, text= 'Nuevo Cliente')
 
 
 
-v0.mainloop()"""
+v0.mainloop()

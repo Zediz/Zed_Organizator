@@ -6,6 +6,8 @@ import time, os
 from Tkinter import *
 from xlrd import *
 from xlutils.copy import copy
+from dateutil import *
+from datetime import *
 
 class nuevoc(Frame):
 	
@@ -169,6 +171,12 @@ class nuevoc(Frame):
 		self.contenidosaldooriginal = StringVar()
 		self.saldooriginalcuadro.config(textvariable = self.contenidosaldooriginal)
 
+		self.fenganchelabel = Label (self, text = "Fecha del Enganche ",font="Times 15 italic bold" )
+		self.fenganchelabel.place(x= 300, y=365)
+
+		self.fproxlabel = Label (self, text = "Fecha del Proximo pago ",font="Times 15 italic bold" )
+		self.fproxlabel.place(x= 600, y=365)
+
 		self.enganche = Label (self, text = "Enganche: ",font="Times 15 italic bold" )
 		self.enganche.place(x= 30, y=395)
 		self.enganchecuadro = Entry (self, width=10)
@@ -177,11 +185,196 @@ class nuevoc(Frame):
 		self.enganchecuadro.config(textvariable = self.contenidoenganche)
 
 		self.formadepago = Label (self, text = "Forma de Pago: ",font="Times 15 italic bold" )
-		self.formadepago.place(x= 30, y=395)
-		self.enganchecuadro = Entry (self, width=10)
-		self.enganchecuadro.place(x=130, y = 395)
-		self.contenidoenganche = StringVar()
-		self.enganchecuadro.config(textvariable = self.contenidoenganche)
+		self.formadepago.place(x= 30, y=425)
+		self.fpagocontenido = StringVar()
+		self.fpago = OptionMenu(self,self.fpagocontenido,'Semanal','Quincenal','Mensual')
+		self.fpago.config( width = 11)
+		self.fpago.place(x=140,y=425)
+
+		self.f2pago = Label (self, text = "Forma de Pago: ",font="Times 15 italic bold" )
+		self.f2pago.place(x= 30, y=425)
+		self.fpagocontenido = StringVar()
+		self.fpago = OptionMenu(self,self.fpagocontenido,'Semanal','Quincenal','Mensual')
+		self.fpago.config( width = 11)
+		self.fpagocontenido.set('Semanal')
+		self.fpago.place(x=140,y=425)
+
+		self.diadepago = Label (self, text = "Dia de Pago: ",font="Times 15 italic bold" )
+		self.diadepago.place(x= 30, y=455)
+		self.dpagocontenido = StringVar()
+		self.dpago = OptionMenu(self,self.dpagocontenido,'Domingo','Lunes','Martes','Miercoles','Jueves','Viernes', 'Sabado')
+		self.dpagocontenido.set('Lunes')
+		self.dpago.config( width = 11)
+		self.dpago.place(x=140,y=455)
+
+		#FECHA DEL ENGANCHE!!!!!!! 
+
+		self.fechaenganche = Label (self, text = "Fecha: ",font="Times 15 italic bold" )
+		self.fechaenganche.place(x= 230, y=395)
+
+		#DIA
+
+		self.dia = Entry (self, width=3)
+		self.dia.place(x=285, y = 395)
+		self.contenidodia = StringVar()
+		self.dia.config(textvariable = self.contenidodia)
+
+		#Mes
+		self.contenidomes = StringVar()
+		self.mes = OptionMenu(self,self.contenidomes,'Enero','Febrero','Marzo', 'Abril', 'Mayo','Junio', 'Julio','Agosto','Septiembre', 'Octubre', 'Noviembre','Diciembre')
+		self.contenidomes.set('Enero')
+		self.mes.config( width = 13)
+		self.mes.place(x=320,y=395)
+
+		#Año
+		self.contenidoyear = StringVar()
+		self.year = OptionMenu(self,self.contenidoyear,'2014','2015','2016', '2017', '2018','2019', '2020','2021','2022','2023')
+		self.contenidoyear.set('2014')
+		self.year.config( width = 7)
+		self.year.place(x=450,y=395)
+
+		#PROXIMO PAGOOOOO!!!!!
+
+		self.diaprox = Entry (self, width=3)
+		
+		self.contenidodiaprox = StringVar()
+		self.diaprox.config(textvariable = self.contenidodiaprox)
+		self.diaprox.place(x=550, y = 395)
+
+		#Mes
+		self.contenidomesprox = StringVar()
+		self.mesprox = OptionMenu(self,self.contenidomesprox,'Enero','Febrero','Marzo', 'Abril', 'Mayo','Junio', 'Julio','Agosto','Septiembre', 'Octubre', 'Noviembre','Diciembre')
+		self.contenidomesprox.set('Enero')
+		self.mesprox.config( width = 13)
+		self.mesprox.place(x=585,y=395)
+		
+
+		#Año
+		self.contenidoyearprox = StringVar()
+		self.yearprox = OptionMenu(self,self.contenidoyearprox,'2014','2015','2016', '2017', '2018','2019', '2020','2021','2022','2023')
+		self.contenidoyearprox.set('2014')
+		self.yearprox.config( width = 7)
+		self.yearprox.place(x=715,y=395)
+
+
+		
+
+
+
+		#Check Botton
+
+		self.CheckVar1 = IntVar()
+		self.C1 = Checkbutton(self, text = "Automatico", variable = self.CheckVar1,onvalue = 1, offvalue = 0,command=lambda : self.calendario())
+		self.C1.place(x=550,y=425)
+
+
+		
+
+	def calendario(self):
+		paloma = self.CheckVar1.get()
+
+		if paloma == 1:
+			self.diaprox.place_forget()
+			self.mesprox.place_forget()
+			self.yearprox.place_forget()
+			self.yearprox.place_forget()
+			self.C1.place(x=550,y=395)
+			
+			print self.CheckVar1.get()
+		if paloma == 0:
+			self.diaprox.place(x=550, y = 395)
+			self.mesprox.place(x=585,y=395)
+			self.yearprox.place(x=715,y=395)
+			self.C1.place(x=550,y=425)
+			
+			print self.CheckVar1.get()
+
+
+	def crear_fecha(self):
+		mes = 0
+
+		if self.contenidomes.get() == "Enero":
+			mes = 1
+		elif self.contenidomes.get() == "Febrero":
+			mes = 2	
+		elif self.contenidomes.get() == "Marzo":
+			mes = 3	
+		elif self.contenidomes.get() == "Abril":
+			mes = 4	
+		elif self.contenidomes.get() == "Mayo":
+			mes = 5	
+		elif self.contenidomes.get() == "Junio":
+			mes = 6	
+		elif self.contenidomes.get() == "Julio":
+			mes = 7	
+		elif self.contenidomes.get() == "Agosto":
+			mes = 8	
+		elif self.contenidomes.get() == "Septiembre":
+			mes = 9	
+		elif self.contenidomes.get() == "Octubre":
+			mes = 10	
+		elif self.contenidomes.get() == "Noviembre":
+			mes = 11	
+		elif self.contenidomes.get() == "Diciembre":
+			mes = 12	
+
+		#**********CREANDO FECHA!!!*************
+
+		fechadada = date(int(self.contenidoyear.get()),mes,int(self.contenidodia.get()))
+
+		return fechadada
+
+	def crear_fechaprox(self):
+		mes = 0
+
+		if self.contenidomesprox.get() == "Enero":
+			mes = 1
+		elif self.contenidomesprox.get() == "Febrero":
+			mes = 2	
+		elif self.contenidomesprox.get() == "Marzo":
+			mes = 3	
+		elif self.contenidomesprox.get() == "Abril":
+			mes = 4	
+		elif self.contenidomesprox.get() == "Mayo":
+			mes = 5	
+		elif self.contenidomesprox.get() == "Junio":
+			mes = 6	
+		elif self.contenidomesprox.get() == "Julio":
+			mes = 7	
+		elif self.contenidomesprox.get() == "Agosto":
+			mes = 8	
+		elif self.contenidomeprox.get() == "Septiembre":
+			mes = 9	
+		elif self.contenidomesprox.get() == "Octubre":
+			mes = 10	
+		elif self.contenidomesprox.get() == "Noviembre":
+			mes = 11	
+		elif self.contenidomesprox.get() == "Diciembre":
+			mes = 12	
+
+		#**********CREANDO FECHA!!!*************
+
+		fechadada = date(int(self.contenidoyearprox.get()),mes,int(self.contenidodiaprox.get()))
+
+		return fechadada	
+
+
+	def prox_pago(self):
+		proxp = date(2014,10,11)
+		fehcad= int(str(self.crear_fecha())[5:6])
+		if self.fpagocontenido.get() == "Semanal":
+			proxp = self.crear_fecha() + timedelta(days=7)
+		elif self.fpagocontenido.get() == "Quincenal":
+			if fehcad < 15:
+				proxp = self.crear_fecha() + timedelta(days=(15 - fehcad))
+			if fehcad >15:
+				proxp = self.crear_fecha() + timedelta(days=(30 -fehcad))
+		#elif self.fpagocontenido.get() == "Mensual"
+
+		return proxp
+
+
+
 
 	def guardar_nuevo (self):
 
@@ -198,8 +391,15 @@ class nuevoc(Frame):
 
 		self.fila = self.sh.nrows
 
+		
+
+		
+
+
+		
+		#Escritura de los datos en la Hoja Data_new
 		conta = 0
-		while conta < 24:
+		while conta < 25:
 			
 			if conta == 0:
 				self.ws.write(self.fila,conta,self.fila)
@@ -228,13 +428,56 @@ class nuevoc(Frame):
 			elif conta == 12:
 				self.ws.write(self.fila,conta,self.contenidooptometrista.get())
 			elif conta == 13:
-				self.ws.write(self.fila,conta,self.contenidovendedor.get())
+				self.ws.write(self.fila,conta,self.contenidovendedor.get()) #FALTA EL 14 que es un espacio
+			elif conta == 15:
+				self.ws.write(self.fila,conta,self.contenidosaldooriginal.get())
+			elif conta == 16:
+				self.ws.write(self.fila,conta,self.contenidoenganche.get())
+			elif conta == 17:
+				self.ws.write(self.fila,conta,self.fpagocontenido.get()) # FALTA EL 18 Fecha del Segundo PAGO
+			elif conta == 19:
+				self.ws.write(self.fila,conta,self.dpagocontenido.get())
+			elif conta == 20:
+				self.ws.write(self.fila,conta,int(self.contenidosaldooriginal.get()) - int(self.contenidoenganche.get()))
+			elif conta == 21:
+				self.ws.write(self.fila, conta,str(self.crear_fecha()))
+			elif conta == 23:
+				if self.CheckVar1.get() == 1:
+					self.ws.write(self.fila, conta, str(self.crear_fechaprox()))
+				elif self.CheckVar1.get() == 0:
+					self.ws.write(self.fila,conta,str(self.prox_pago()))
+			
 
 			conta = conta + 1
 
 
-
+		print self.prox_pago()
 		self.wb.save('data_new.xls')
+
+		self.nombrecuadro.delete (0, END )
+		self.celularcuadro.delete(0,END)
+		self.telefonocuadro.delete (0, END )
+		self.callecuadro.delete (0, END )
+		self.numerocuadro.delete (0, END )
+		self.coloniacuadro.delete (0, END )
+		self.entrecallescuadro.delete (0, END )
+		self.ciudadcuadro.delete (0, END )
+		self.estadocuadro.delete (0, END )
+		self.observcuadro.delete (0, END )
+		self.ocupacioncuadro.delete (0, END )
+		self.optometristacuadro.delete (0, END )
+		self.vendedorcuadro.delete (0, END )
+		self.saldooriginalcuadro.delete (0, END )
+		self.enganchecuadro.delete (0, END )
+		self.dia.delete (0, END )
+		self.diaprox.delete (0, END )
+
+		self.done = Label (self, text= "El cliente se guardo satisfactoriamente con el numero:")
+		self.done.place(x=230,y=500)
+
+		self.numcliente = Label (self,text = str(self.sh.nrows+1))
+		self.numcliente.place(x=250,y=530)
+
 
 
 
